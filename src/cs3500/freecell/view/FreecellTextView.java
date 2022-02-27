@@ -81,7 +81,7 @@ public class FreecellTextView implements FreecellView {
 
   @Override
   public void renderBoard() throws IOException {
-    this.output.append(this.toString());
+    this.output.append(this + "\n");
   }
 
   @Override
