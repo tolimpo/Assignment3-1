@@ -2,6 +2,7 @@ package cs3500.freecell.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import cs3500.freecell.model.Card;
@@ -102,7 +103,6 @@ public class SimpleFreecellController implements FreecellController<Card> {
   private void renderBoard() {
     try {
       this.view.renderBoard();
-      this.view.renderMessage("\n");
     } catch (IOException e) {
       throw new IllegalStateException("Write to Appendable failed!");
     }
@@ -126,7 +126,11 @@ public class SimpleFreecellController implements FreecellController<Card> {
     String userInput;
     boolean valid;
     do {
-      userInput = this.scan.next();
+      try {
+        userInput = this.scan.next();
+      } catch (NoSuchElementException e) {
+        throw new IllegalStateException("Read from Readable failed!");
+      }
       if (userInput.equals("Q") || userInput.equals("q")) {
         this.quit = true;
         return userInput;
