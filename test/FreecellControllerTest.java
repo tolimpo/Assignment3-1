@@ -113,6 +113,13 @@ public class FreecellControllerTest {
     mockCtrl.playGame(model.getDeck(), 8, 4, false);
   }
 
+  @Test(expected = IllegalStateException.class)
+  public void testPlayGameReadFromReadableFails() {
+    FreecellController<Card> mockCtrl = new SimpleFreecellController(model,
+        new StringReader("C1 7 C6"), output);
+    mockCtrl.playGame(model.getDeck(), 8, 4, false);
+  }
+
 
   @Test(expected = IllegalArgumentException.class)
   public void testPlayGameNullDeck() {
