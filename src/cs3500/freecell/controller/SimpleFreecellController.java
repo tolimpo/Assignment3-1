@@ -103,6 +103,7 @@ public class SimpleFreecellController implements FreecellController<Card> {
   private void renderBoard() {
     try {
       this.view.renderBoard();
+      this.view.renderMessage("\n");
     } catch (IOException e) {
       throw new IllegalStateException("Write to Appendable failed!");
     }
