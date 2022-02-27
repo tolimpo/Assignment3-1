@@ -8,12 +8,16 @@ import cs3500.freecell.model.Rank;
 import cs3500.freecell.model.Suit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * JUnit tests for the {@link Card} class and related enums ({@link Suit} and {@link Rank}).
  */
 public class CardTest {
+  Card cardNull1;
+  Card cardNull2;
   Card card1A;
   Card card1B;
   Card card2;
@@ -26,6 +30,8 @@ public class CardTest {
 
   @Before
   public void setup() {
+    cardNull1 = new Card(Suit.HEARTS, null);
+    cardNull2 = new Card(null, Rank.FIVE);
     card1A = new Card(Suit.CLUBS, Rank.SIX);
     card1B = new Card(Suit.CLUBS, Rank.SIX);
     card2 = new Card(Suit.DIAMONDS, Rank.SEVEN);
@@ -35,6 +41,14 @@ public class CardTest {
     card6 = new Card(Suit.DIAMONDS, Rank.EIGHT);
     card7 = new Card(Suit.HEARTS, Rank.ACE);
     str = "foo";
+  }
+
+  @Test
+  public void testIsValidCard() {
+    assertTrue(card1A.isValidCard());
+    assertTrue(card4.isValidCard());
+    assertFalse(cardNull1.isValidCard());
+    assertFalse(cardNull2.isValidCard());
   }
 
   @Test
