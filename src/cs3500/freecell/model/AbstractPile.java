@@ -8,7 +8,7 @@ import java.util.List;
  * the fields and methods included in this class.
  */
 public abstract class AbstractPile {
-  List<Card> stack = new ArrayList<>();
+  protected List<Card> stack = new ArrayList<>();
 
   void add(Card c) {
     this.stack.add(c);
@@ -22,11 +22,11 @@ public abstract class AbstractPile {
     return this.stack.get(index);
   }
 
-  void remove(Card c) {
+  protected void remove(Card c) {
     this.stack.remove(c);
   }
 
-  void moveFrom(int sourceCardIndex, AbstractPile destinationPile) {
+  protected void moveFrom(int sourceCardIndex, AbstractPile destinationPile) {
     if (this.stack.size() - 1 == sourceCardIndex) {
       destinationPile.moveTo(this.stack.get(sourceCardIndex), this);
     } else {
@@ -34,7 +34,7 @@ public abstract class AbstractPile {
     }
   }
 
-  void moveTo(Card cardInQuestion, AbstractPile sourcePile) {
+  protected void moveTo(Card cardInQuestion, AbstractPile sourcePile) {
     Card target = null;
     if (this.stack.size() != 0) {
       target = this.stack.get(this.stack.size() - 1);
