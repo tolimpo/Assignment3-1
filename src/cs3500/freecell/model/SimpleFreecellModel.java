@@ -16,7 +16,7 @@ public class SimpleFreecellModel extends AbstractModel {
 
 
   @Override
-  protected void createCascadePiles() {
+  protected void createCascadePile() {
     cascadePiles.add(new CascadePile());
   }
 }
