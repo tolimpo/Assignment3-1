@@ -6,7 +6,7 @@ import cs3500.freecell.model.AbstractModel;
 public class MultimoveModel extends AbstractModel {
 
   @Override
-  protected void createCascadePiles() {
-    cascadePiles.add(new MultimoveCascadePile());
+  protected void createCascadePile() {
+    cascadePiles.add(new MultimoveCascadePile(this));
   }
 }
