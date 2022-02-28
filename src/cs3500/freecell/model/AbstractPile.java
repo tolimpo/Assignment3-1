@@ -10,37 +10,29 @@ import java.util.List;
 public abstract class AbstractPile {
   protected List<Card> stack = new ArrayList<>();
 
-  void add(Card c) {
-    this.stack.add(c);
+  List<Card> getStack() {
+    return this.stack;
   }
 
-  int size() {
-    return this.stack.size();
-  }
-
-  Card get(int index) {
-    return this.stack.get(index);
-  }
-
-  protected void remove(Card c) {
-    this.stack.remove(c);
-  }
-
-  protected void moveFrom(int sourceCardIndex, AbstractPile destinationPile) {
-    if (this.stack.size() - 1 == sourceCardIndex) {
+  void moveFrom(int sourceCardIndex, AbstractPile destinationPile) {
+    if (sourceCardIndex == this.stack.size() - 1) {
       destinationPile.moveTo(this.stack.get(sourceCardIndex), this);
     } else {
-      throw new IllegalArgumentException("Given index not the end of pile, card cannot be moved!");
+      destinationPile.moveBuildTo(sourceCardIndex, this.stack);
     }
   }
 
-  protected void moveTo(Card cardInQuestion, AbstractPile sourcePile) {
+  protected void moveBuildTo(int startCardIndex, List<Card> sourcePile) {
+    throw new IllegalArgumentException("Given index not the end of pile, card cannot be moved!");
+  }
+
+  void moveTo(Card cardInQuestion, AbstractPile sourcePile) {
     Card target = null;
     if (this.stack.size() != 0) {
       target = this.stack.get(this.stack.size() - 1);
     }
     if (this.validMove(cardInQuestion, target)) {
-      sourcePile.remove(cardInQuestion);
+      sourcePile.getStack().remove(cardInQuestion);
       this.stack.add(cardInQuestion);
     } else {
       throw new IllegalArgumentException("Not a valid move!");
