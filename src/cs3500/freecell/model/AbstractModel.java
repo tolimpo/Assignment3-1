@@ -62,7 +62,7 @@ public abstract class AbstractModel implements FreecellModel<Card> {
       foundationPiles = new ArrayList<>();
     }
     for (int i = 0; i < numCascadePiles; i++) {
-      this.createCascadePiles();
+      this.createCascadePile();
     }
     for (int i = 0; i < numOpenPiles; i++) {
       openPiles.add(new OpenPile());
@@ -74,7 +74,7 @@ public abstract class AbstractModel implements FreecellModel<Card> {
     List<Card> dealDeck = new ArrayList<>(this.deck);
     int currentCascadePile = 0;
     while (!dealDeck.isEmpty()) {
-      cascadePiles.get(currentCascadePile).add(dealDeck.remove(0));
+      cascadePiles.get(currentCascadePile).getStack().add(dealDeck.remove(0));
       currentCascadePile = (currentCascadePile + 1) % numCascadePiles;
     }
 
@@ -116,7 +116,7 @@ public abstract class AbstractModel implements FreecellModel<Card> {
     this.deck = shuffled;
   }
 
-  protected abstract void createCascadePiles();
+  protected abstract void createCascadePile();
 
   @Override
   public void move(PileType source, int pileNumber, int cardIndex,
@@ -154,11 +154,11 @@ public abstract class AbstractModel implements FreecellModel<Card> {
     switch (source) {
       case CASCADE:
         this.checkValidIndex(this.cascadePiles.size(), pileNumber);
-        this.checkValidIndex(this.cascadePiles.get(pileNumber).size(), cardIndex);
+        this.checkValidIndex(this.cascadePiles.get(pileNumber).getStack().size(), cardIndex);
         break;
       case OPEN:
         this.checkValidIndex(this.openPiles.size(), pileNumber);
-        this.checkValidIndex(this.openPiles.get(pileNumber).size(), cardIndex);
+        this.checkValidIndex(this.openPiles.get(pileNumber).getStack().size(), cardIndex);
         break;
       case FOUNDATION:
         throw new IllegalArgumentException("Cannot move card from foundation pile!");
@@ -188,7 +188,7 @@ public abstract class AbstractModel implements FreecellModel<Card> {
   @Override
   public boolean isGameOver() {
     for (AbstractPile f : foundationPiles) {
-      if (f.size() != 13) {
+      if (f.getStack().size() != 13) {
         return false;
       }
     }
@@ -199,7 +199,7 @@ public abstract class AbstractModel implements FreecellModel<Card> {
   public int getNumCardsInFoundationPile(int index) {
     this.checkGameStarted();
     this.checkValidIndex(4, index);
-    return this.foundationPiles.get(index).size();
+    return this.foundationPiles.get(index).getStack().size();
   }
 
   @Override
@@ -216,14 +216,14 @@ public abstract class AbstractModel implements FreecellModel<Card> {
   public int getNumCardsInCascadePile(int index) {
     this.checkGameStarted();
     this.checkValidIndex(this.cascadePiles.size(), index);
-    return this.cascadePiles.get(index).size();
+    return this.cascadePiles.get(index).getStack().size();
   }
 
   @Override
   public int getNumCardsInOpenPile(int index) {
     this.checkGameStarted();
     this.checkValidIndex(this.openPiles.size(), index);
-    return this.openPiles.get(index).size();
+    return this.openPiles.get(index).getStack().size();
   }
 
   @Override
@@ -239,26 +239,26 @@ public abstract class AbstractModel implements FreecellModel<Card> {
   public Card getFoundationCardAt(int pileIndex, int cardIndex) {
     this.checkGameStarted();
     this.checkValidIndex(this.foundationPiles.size(), pileIndex);
-    this.checkValidIndex(this.foundationPiles.get(pileIndex).size(), cardIndex);
-    return this.foundationPiles.get(pileIndex).get(cardIndex);
+    this.checkValidIndex(this.foundationPiles.get(pileIndex).getStack().size(), cardIndex);
+    return this.foundationPiles.get(pileIndex).getStack().get(cardIndex);
   }
 
   @Override
   public Card getCascadeCardAt(int pileIndex, int cardIndex) {
     this.checkGameStarted();
     this.checkValidIndex(this.cascadePiles.size(), pileIndex);
-    this.checkValidIndex(this.cascadePiles.get(pileIndex).size(), cardIndex);
-    return this.cascadePiles.get(pileIndex).get(cardIndex);
+    this.checkValidIndex(this.cascadePiles.get(pileIndex).getStack().size(), cardIndex);
+    return this.cascadePiles.get(pileIndex).getStack().get(cardIndex);
   }
 
   @Override
   public Card getOpenCardAt(int pileIndex) {
     this.checkGameStarted();
     this.checkValidIndex(this.openPiles.size(), pileIndex);
-    if (this.openPiles.get(pileIndex).size() == 0) {
+    if (this.openPiles.get(pileIndex).getStack().size() == 0) {
       return null;
     } else {
-      return this.openPiles.get(pileIndex).get(0);
+      return this.openPiles.get(pileIndex).getStack().get(0);
     }
   }
 
