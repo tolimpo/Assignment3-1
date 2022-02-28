@@ -47,6 +47,6 @@ public abstract class AbstractPile {
     }
   }
 
-  abstract boolean validMove(Card mover, Card target);
+  protected abstract boolean validMove(Card mover, Card target);
 
 }

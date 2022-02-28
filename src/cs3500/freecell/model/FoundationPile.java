@@ -12,7 +12,7 @@ public class FoundationPile extends AbstractPile {
 
 
   @Override
-  boolean validMove(Card mover, Card target) {
+  protected boolean validMove(Card mover, Card target) {
     if (target == null) {
       return mover.getRank() == Rank.ACE;
     } else {

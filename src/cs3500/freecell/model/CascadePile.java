@@ -6,7 +6,7 @@ package cs3500.freecell.model;
 public class CascadePile extends AbstractPile {
 
   @Override
-  boolean validMove(Card mover, Card target) {
+  protected boolean validMove(Card mover, Card target) {
     if (target == null) {
       return true;
     } else {
