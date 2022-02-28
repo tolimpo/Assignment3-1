@@ -1,30 +1,75 @@
 package cs3500.freecell.model.multimove;
 
-import cs3500.freecell.model.AbstractPile;
+import java.util.List;
+
 import cs3500.freecell.model.Card;
 import cs3500.freecell.model.CascadePile;
 
 public class MultimoveCascadePile extends CascadePile {
+  private final MultimoveModel model;
 
-  protected void moveFrom(int sourceCardIndex, AbstractPile destinationPile) {
-    if (this.stack.size() - 1 == sourceCardIndex) {
-      destinationPile.moveTo(this.stack.get(sourceCardIndex), this);
-    } else {
-      throw new IllegalArgumentException("Given index not the end of pile, card cannot be moved!");
-    }
+  MultimoveCascadePile(MultimoveModel model) {
+    this.model = model;
   }
 
-  protected void moveTo(Card cardInQuestion, AbstractPile sourcePile) {
-    Card target = null;
-    if (this.stack.size() != 0) {
-      target = this.stack.get(this.stack.size() - 1);
-    }
-    if (this.validMove(cardInQuestion, target)) {
-      sourcePile.remove(cardInQuestion);
-      this.stack.add(cardInQuestion);
+  @Override
+  protected void moveBuildTo(int startCardIndex, List<Card> sourcePile) {
+    int sourceSize = sourcePile.size();
+    List<Card> build = sourcePile.subList(startCardIndex, sourceSize);
+    int buildSize = build.size();
+    if (this.validBuild(build)
+        && this.enoughIntermediateSpots(buildSize)) {
+      int currentIndex = startCardIndex;
+
+
+      while (currentIndex < sourceSize) {
+        this.stack.add(sourcePile.remove(startCardIndex));
+        currentIndex++;
+      }
     } else {
       throw new IllegalArgumentException("Not a valid move!");
     }
   }
+
+  private boolean validBuild(List<Card> build) {
+    if (!this.validMove(build.get(0), this.stack.get(this.stack.size() - 1))) {
+      return false;
+    }
+    for (int i = 1; i < build.size() - 1; i++) {
+      if (!this.validMove(build.get(i + 1), build.get(i))) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private boolean enoughIntermediateSpots(int buildSize) {
+    int numFreeOpen = 0;
+    int count = 0;
+    while (count < model.getNumOpenPiles()) {
+      if (model.getNumCardsInOpenPile(count) == 0) {
+        numFreeOpen++;
+      }
+      count++;
+
+    }
+
+    int numFreeCascade = 0;
+    count = 0;
+    while (count < model.getNumCascadePiles()) {
+      if (model.getNumCardsInCascadePile(count) == 0) {
+        numFreeCascade++;
+      }
+      count++;
+    }
+
+    if (this.stack.size() == 0) {
+      numFreeCascade--;
+    }
+
+    return buildSize <= (numFreeOpen + 1) * Math.pow(2, numFreeCascade);
+  }
+
 
 }
