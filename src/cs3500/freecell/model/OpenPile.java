@@ -6,7 +6,7 @@ package cs3500.freecell.model;
 public class OpenPile extends AbstractPile {
 
   @Override
-  protected boolean validMove(Card mover, Card target) {
+  boolean validMove(Card mover, Card target) {
     return target == null;
   }
 }
