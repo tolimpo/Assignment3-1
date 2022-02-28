@@ -17,7 +17,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * JUnit test cases for the freecell model.
+ * JUnit test cases for the simple freecell model.
  */
 public class FreecellModelTest {
   SimpleFreecellModel game1A;
