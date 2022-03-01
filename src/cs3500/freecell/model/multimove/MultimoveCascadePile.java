@@ -32,15 +32,17 @@ public class MultimoveCascadePile extends CascadePile {
   }
 
   private boolean validBuild(List<Card> build) {
-    if (!this.validMove(build.get(0), this.stack.get(this.stack.size() - 1))) {
-      return false;
+    if (this.stack.size() != 0) {
+      if (!this.validMove(build.get(0), this.stack.get(this.stack.size() - 1))) {
+        System.out.println(this.stack.get(this.stack.size() - 1));
+        return false;
+      }
     }
     for (int i = 0; i < build.size() - 1; i++) {
       if (!this.validMove(build.get(i + 1), build.get(i))) {
         return false;
       }
     }
-
     return true;
   }
 
