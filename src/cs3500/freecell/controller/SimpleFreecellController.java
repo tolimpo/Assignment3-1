@@ -127,6 +127,7 @@ public class SimpleFreecellController implements FreecellController<Card> {
     String userInput;
     boolean valid;
     do {
+      // Added this try/catch for possible Readable error.
       try {
         userInput = this.scan.next();
       } catch (NoSuchElementException e) {
@@ -194,6 +195,7 @@ public class SimpleFreecellController implements FreecellController<Card> {
                     PileType destPileType, int destPileNumber) {
     try {
       this.model.move(sourcePileType, sourcePileNumber, cardIndex, destPileType, destPileNumber);
+      // this newLine character was added to separate gameboards as they appear on screen.
       this.view.renderMessage("\n");
       this.renderBoard();
     } catch (IllegalArgumentException | IOException iae) {

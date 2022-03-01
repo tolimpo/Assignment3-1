@@ -7,6 +7,11 @@ import java.util.Random;
 
 public abstract class AbstractModel implements FreecellModel<Card> {
 
+  /*
+  This abstraction is brand new to allow both
+  SimpleFreecellModel and MultimoveModel to share code.
+   */
+
   private List<Card> deck;
   private boolean gameStarted;
   private List<AbstractPile> openPiles;
@@ -116,6 +121,7 @@ public abstract class AbstractModel implements FreecellModel<Card> {
     this.deck = shuffled;
   }
 
+  // This is new, as cascade piles that allow multimove are a different class
   protected abstract void createCascadePile();
 
   @Override

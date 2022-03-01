@@ -9,7 +9,10 @@ package cs3500.freecell.model;
  */
 public class SimpleFreecellModel extends AbstractModel {
 
-
+  /*
+  All functionality is now in AbstractModel, except to create the cascade piles,
+  which is specific to the SimpleFreecellModel implementation.
+   */
   @Override
   protected void createCascadePile() {
     cascadePiles.add(new CascadePile());
