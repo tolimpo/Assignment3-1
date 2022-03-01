@@ -194,8 +194,9 @@ public class SimpleFreecellController implements FreecellController<Card> {
                     PileType destPileType, int destPileNumber) {
     try {
       this.model.move(sourcePileType, sourcePileNumber, cardIndex, destPileType, destPileNumber);
+      this.view.renderMessage("\n");
       this.renderBoard();
-    } catch (IllegalArgumentException iae) {
+    } catch (IllegalArgumentException | IOException iae) {
       try {
         this.view.renderMessage("Invalid move. Try again. " + iae.getMessage() + "\n");
       } catch (IOException e) {
