@@ -173,14 +173,17 @@ public class MultimoveModelTest extends AbstractModelTest {
     game2unshuffled.move(PileType.CASCADE, 0, 6, PileType.CASCADE, 5);
     game2unshuffled.move(PileType.CASCADE, 5, 5, PileType.CASCADE, 0);
     game2unshuffled.move(PileType.CASCADE, 0, 5, PileType.CASCADE, 5);
-    // moving a build of 4, which is the max because the pile will be moved to an empty cascade
     game2unshuffled.move(PileType.CASCADE, 5, 4, PileType.CASCADE, 0);
+    // moving a build of 5, which is the max because the pile will be moved to an empty cascade
+    game2unshuffled.move(PileType.CASCADE, 0, 4, PileType.CASCADE, 5);
 
     /*
     Exception thrown here, testing the nuance of when the move is to
     an empty cascade pile, the destination pile does not count as empty.
+    There is four empty open, and one empty cascade. Using the formula,
+    the max build that can be moved is 10. But since this build of 6
+    is moving to an empty cascade, the max build because 5.
      */
-    game2unshuffled.move(PileType.CASCADE, 0, 4, PileType.CASCADE, 7);
+    game2unshuffled.move(PileType.CASCADE, 5, 3, PileType.CASCADE, 7);
   }
-
 }
