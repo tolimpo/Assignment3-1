@@ -8,9 +8,11 @@ import cs3500.freecell.controller.MockAppendable;
 import cs3500.freecell.controller.SimpleFreecellController;
 import cs3500.freecell.model.Card;
 import cs3500.freecell.model.FreecellModel;
+import cs3500.freecell.model.PileType;
 import cs3500.freecell.model.SimpleFreecellModel;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * JUnit test cases for the freecell controller.
@@ -26,6 +28,7 @@ public class FreecellControllerTest {
   FreecellController<Card> ctrlQuitThird;
   FreecellController<Card> ctrlSkipBadInputs1;
   FreecellController<Card> ctrlSkipBadInputs2;
+  FreecellController<Card> ctrlSkipBadInputs3;
   FreecellController<Card> ctrlNoMoveFromFoundation;
   FreecellController<Card> ctrlBadSourcePileIndex;
   FreecellController<Card> ctrlBadCardIndex;
@@ -58,7 +61,7 @@ public class FreecellControllerTest {
         + "C6: Q♦, 10♦, 8♦, 6♦, 4♦, 2♦\n"
         + "C7: Q♥, 10♥, 8♥, 6♥, 4♥, 2♥\n"
         + "C8: Q♠, 10♠, 8♠, 6♠, 4♠, 2♠\n";
-    firstMove = "F1:\n"
+    firstMove = "\nF1:\n"
         + "F2:\n"
         + "F3:\n"
         + "F4:\n"
@@ -80,9 +83,11 @@ public class FreecellControllerTest {
         output);
     ctrlQuitThird = new SimpleFreecellController(model, new StringReader("C1 7 Q"),
         output);
-    ctrlSkipBadInputs1 = new SimpleFreecellController(model, new StringReader("C1 foo 7 C6 Q"),
+    ctrlSkipBadInputs1 = new SimpleFreecellController(model, new StringReader("skip C1 7 C6 Q"),
         output);
-    ctrlSkipBadInputs2 = new SimpleFreecellController(model,
+    ctrlSkipBadInputs2 = new SimpleFreecellController(model, new StringReader("C1 foo 7 C6 Q"),
+        output);
+    ctrlSkipBadInputs3 = new SimpleFreecellController(model,
         new StringReader("C1 7 chocolate pretzel c6 C6 Q"), output);
     ctrlNoMoveFromFoundation = new SimpleFreecellController(model,
         new StringReader("C1 7 F1 F1 1 C6 Q"), output);
@@ -104,6 +109,24 @@ public class FreecellControllerTest {
         new StringReader("C1 7 O1 O1 1 C6 Q"), output);
     ctrlMoveOpenToFoundation = new SimpleFreecellController(model,
         new StringReader("C1 7 O1 O1 1 F1 Q"), output);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testConstructorNullModel() {
+    FreecellController<Card> badCtrl = new SimpleFreecellController(null,
+        new StringReader("C1 7 C6 Q"), output);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testConstructorNullReadable() {
+    FreecellController<Card> badCtrl = new SimpleFreecellController(model,
+        null, output);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testConstructorNullAppendable() {
+    FreecellController<Card> badCtrl = new SimpleFreecellController(model,
+        new StringReader("C1 7 C6 Q"), null);
   }
 
   @Test(expected = IllegalStateException.class)
@@ -169,9 +192,15 @@ public class FreecellControllerTest {
   }
 
   @Test
+  public void testPlayGameSkipBadInputs3() {
+    ctrlSkipBadInputs3.playGame(model.getDeck(), 8, 4, false);
+    assertEquals(initialBoard + firstMove + "Game quit prematurely.", output.toString());
+  }
+
+  @Test
   public void testPlayGameNoMoveFromFoundation() {
     ctrlNoMoveFromFoundation.playGame(model.getDeck(), 8, 4, false);
-    String result = "F1: A♣\n"
+    String result = "\nF1: A♣\n"
         + "F2:\n"
         + "F3:\n"
         + "F4:\n"
@@ -223,7 +252,7 @@ public class FreecellControllerTest {
   @Test
   public void testPlayGameInvalidMoveToOpen() {
     ctrlInvalidMoveToOpen.playGame(model.getDeck(), 8, 4, false);
-    String result = "F1:\n"
+    String result = "\nF1:\n"
         + "F2:\n"
         + "F3:\n"
         + "F4:\n"
@@ -254,7 +283,7 @@ public class FreecellControllerTest {
   @Test
   public void testPlayGameInvalidMoveToFoundation2() {
     ctrlInvalidMoveToFoundation2.playGame(model.getDeck(), 8, 4, false);
-    String result = "F1: A♣\n"
+    String result = "\nF1: A♣\n"
         + "F2:\n"
         + "F3:\n"
         + "F4:\n"
@@ -278,7 +307,7 @@ public class FreecellControllerTest {
   @Test
   public void testPlayGameMoveOpenToCascade() {
     ctrlMoveOpenToCascade.playGame(model.getDeck(), 8, 4, false);
-    String result = "F1:\n"
+    String result = "\nF1:\n"
         + "F2:\n"
         + "F3:\n"
         + "F4:\n"
@@ -294,7 +323,7 @@ public class FreecellControllerTest {
         + "C6: Q♦, 10♦, 8♦, 6♦, 4♦, 2♦\n"
         + "C7: Q♥, 10♥, 8♥, 6♥, 4♥, 2♥\n"
         + "C8: Q♠, 10♠, 8♠, 6♠, 4♠, 2♠\n"
-        + "F1:\n"
+        + "\nF1:\n"
         + "F2:\n"
         + "F3:\n"
         + "F4:\n"
@@ -317,7 +346,7 @@ public class FreecellControllerTest {
   @Test
   public void testPlayGameMoveOpenToFoundation() {
     ctrlMoveOpenToFoundation.playGame(model.getDeck(), 8, 4, false);
-    String result = "F1:\n"
+    String result = "\nF1:\n"
         + "F2:\n"
         + "F3:\n"
         + "F4:\n"
@@ -333,7 +362,7 @@ public class FreecellControllerTest {
         + "C6: Q♦, 10♦, 8♦, 6♦, 4♦, 2♦\n"
         + "C7: Q♥, 10♥, 8♥, 6♥, 4♥, 2♥\n"
         + "C8: Q♠, 10♠, 8♠, 6♠, 4♠, 2♠\n"
-        + "F1: A♣\n"
+        + "\nF1: A♣\n"
         + "F2:\n"
         + "F3:\n"
         + "F4:\n"
@@ -352,4 +381,96 @@ public class FreecellControllerTest {
         + "Game quit prematurely.";
     assertEquals(initialBoard + result, output.toString());
   }
+
+  @Test
+  public void testPlayGameComplete() {
+    StringBuilder moves = new StringBuilder();
+    int currSourcePile = 4;
+    int currCardIndex = 7;
+    int currDestPile = 4;
+    for (int i = 0; i < 52; i++) {
+      moves.append("C").append(currSourcePile)
+          .append(" ")
+          .append(currCardIndex)
+          .append(" ")
+          .append("F").append(currDestPile)
+          .append(" ");
+      if (currSourcePile == 1) {
+        currSourcePile = 8;
+        currCardIndex--;
+      } else {
+        currSourcePile--;
+      }
+      currDestPile = (currDestPile - 1) % 4;
+      if (currDestPile == 0) {
+        currDestPile = 4;
+      }
+    }
+
+    StringReader winGameMoves = new StringReader(moves.toString());
+
+    FreecellController<Card> completeGame = new SimpleFreecellController(model,
+        winGameMoves, output);
+    completeGame.playGame(model.getDeck(), 8, 4, false);
+
+    String outputString = output.toString();
+    int outputSize = outputString.length();
+
+    // Testing game over message at end of output
+    assertEquals("Game over.", outputString.substring(outputSize - 10, outputSize));
+    // Testing the model isGameOver() to see if the game is really over
+    assertTrue(model.isGameOver());
+  }
+
+  @Test
+  public void testPlayGameCompleteWithInvalidInputs() {
+    StringBuilder moves = new StringBuilder();
+    int currSourcePile = 4;
+    int currCardIndex = 7;
+    int currDestPile = 4;
+    for (int i = 0; i < 52; i++) {
+      moves.append("C").append(currSourcePile)
+          .append(" ")
+          .append(currCardIndex)
+          .append(" ")
+          .append("F").append(currDestPile)
+          .append(" ");
+      if (currSourcePile == 1) {
+        currSourcePile = 8;
+        currCardIndex--;
+      } else {
+        currSourcePile--;
+      }
+      currDestPile = (currDestPile - 1) % 4;
+      if (currDestPile == 0) {
+        currDestPile = 4;
+      }
+
+      // introducing invalid moves
+      if (i % 5 == 0) {
+        moves.append("C").append(i * 12)
+            .append(" ")
+            .append(i * 8)
+            .append(" ")
+            .append("F").append(currDestPile - 10)
+            .append(" ");
+      }
+    }
+
+    StringReader winGameMoves = new StringReader(moves.toString());
+
+    FreecellController<Card> completeGame = new SimpleFreecellController(model,
+        winGameMoves, output);
+    completeGame.playGame(model.getDeck(), 8, 4, false);
+
+    String outputString = output.toString();
+    int outputSize = outputString.length();
+
+    // Testing game over message at end of output
+    assertEquals("Game over.", outputString.substring(outputSize - 10, outputSize));
+    // Testing the model isGameOver() to see if the game is really over
+    assertTrue(model.isGameOver());
+  }
+
+
 }
