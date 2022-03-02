@@ -102,7 +102,7 @@ public abstract class AbstractModel implements FreecellModel<Card> {
           return false;
         }
       }
-      if (!deck.get(i).isValidCard()) {
+      if (!deck.get(i).isValidCard() || deck.get(i) == null) {
         return false;
       }
     }
